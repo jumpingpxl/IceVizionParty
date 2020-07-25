@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>de.icevizion</groupId>
+  <artifactId>partysystem</artifactId>
+  <packaging>pom</packaging>
+  <version>${global.version}</version>
+  <modules>
+    <module>partysystem-spigot</module>
+    <module>partysystem-core</module>
+    <module>partysystem-cloud</module>
+  </modules>
+
+  <properties>
+    <global.version>0.0.1-SNAPSHOT</global.version>
+    <lombok.version>1.18.12</lombok.version>
+    <cloudapi.version>1.0-SNAPSHOT</cloudapi.version>
+    <cloudcoreapi.version>1.0-SNAPSHOT</cloudcoreapi.version>
+    <cloudspigotapi.version>1.0-SNAPSHOT</cloudspigotapi.version>
+    <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+    <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
+    <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+    <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
+  </properties>
+</project>
