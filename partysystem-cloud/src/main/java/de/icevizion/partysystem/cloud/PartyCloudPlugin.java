@@ -25,6 +25,8 @@ public class PartyCloudPlugin extends Plugin {
 		//TODO -> Remove Singleton Pattern.
 		cloud = Cloud.getInstance();
 
+		locales = new Locales(this);
+
 		cloud.registerCommand("party", new PartyCommand(this));
 		cloud.registerCommand("p", new PartyMessageCommand(this));
 	}
