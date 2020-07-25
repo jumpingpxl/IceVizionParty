@@ -56,7 +56,7 @@ public class PartyCloudPlugin extends Plugin {
 
 	public Optional<Party> getPartyByPlayer(CloudPlayer player) {
 		for (Party parties : getParties()) {
-			if (parties.isActive() && (parties.isLeader(player) || parties.getMemberUuids().contains(player.getUuid()))) {
+			if (parties.isLeader(player) || parties.getMemberUuids().contains(player.getUuid())) {
 				return Optional.of(parties);
 			}
 		}
