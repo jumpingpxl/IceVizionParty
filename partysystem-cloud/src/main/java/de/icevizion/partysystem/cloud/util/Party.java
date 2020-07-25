@@ -130,6 +130,7 @@ public class Party extends MemoryObject implements IParty {
 	}
 
 	public void sendMessage(Translator translator, String key, Object... arguments) {
+		translator.sendMessage(getLeader(), key, arguments);
 		getMembers().forEach(member -> translator.sendMessage(member, key, arguments));
 	}
 }
