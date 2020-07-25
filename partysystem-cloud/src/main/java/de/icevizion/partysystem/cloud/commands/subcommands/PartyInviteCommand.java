@@ -26,25 +26,31 @@ public class PartyInviteCommand extends PartySubCommand {
 			return;
 		}
 
+		Optional<Party> optionalParty = partyPlugin.getPartyByPlayer(cloudPlayer);
+		if (!optionalParty.isPresent()) {
+			Party createdParty = partyPlugin.createParty(cloudPlayer);
+			invitePlayer(createdParty, cloudPlayer, args);
+			return;
+		}
+
+		Party party = optionalParty.get();
+		if (!party.isLeader(cloudPlayer)) {
+			partyPlugin.getLocales().sendMessage(cloudPlayer, "notLeader");
+			return;
+		}
+
+		invitePlayer(party, cloudPlayer, args);
+	}
+
+	public void invitePlayer(Party party, CloudPlayer cloudPlayer, String[] args) {
 		for (String target : args) {
-			CloudPlayer targetPlayer = partyPlugin.getCloud().getPlayer(args[1]);
+			CloudPlayer targetPlayer = partyPlugin.getCloud().getPlayer(target);
 			if (!isPlayerAvailable(partyPlugin.getLocales(), cloudPlayer, targetPlayer)) {
 				return;
 			}
 
 			if (targetPlayer.getUuid().equals(cloudPlayer.getUuid())) {
 				partyPlugin.getLocales().sendMessage(cloudPlayer, "partyInviteSelf");
-				return;
-			}
-
-			Optional<Party> optionalParty = partyPlugin.getPartyByPlayer(cloudPlayer);
-			if (!optionalParty.isPresent()) {
-				optionalParty = Optional.of(partyPlugin.createParty(cloudPlayer));
-			}
-
-			Party party = optionalParty.get();
-			if (!party.isLeader(cloudPlayer)) {
-				partyPlugin.getLocales().sendMessage(cloudPlayer, "notLeader");
 				return;
 			}
 
@@ -61,7 +67,7 @@ public class PartyInviteCommand extends PartySubCommand {
 			}
 
 			Optional<Party> optionalTargetParty = partyPlugin.getPartyByPlayer(targetPlayer);
-			if (!optionalTargetParty.isPresent()) {
+			if (optionalTargetParty.isPresent()) {
 				partyPlugin.getLocales().sendMessage(cloudPlayer, "partyInviteInOtherParty",
 						targetPlayer.getFullDisplayName());
 				return;
