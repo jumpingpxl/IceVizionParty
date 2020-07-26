@@ -52,6 +52,7 @@ public class ScheduledTask {
 	public void cancel() {
 		if(started) {
 			timer.cancel();
+			timer = new Timer();
 		}
 
 		started = false;
