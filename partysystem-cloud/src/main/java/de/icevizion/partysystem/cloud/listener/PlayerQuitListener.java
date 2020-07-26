@@ -25,7 +25,7 @@ public class PlayerQuitListener implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Optional<Party> optionalParty = partyPlugin.getPartyByPlayer(event.getCloudPlayer());
-		if (optionalParty.isPresent()) {
+		if (!optionalParty.isPresent()) {
 			return;
 		}
 

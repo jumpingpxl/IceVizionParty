@@ -50,12 +50,12 @@ public class PlayerSwitchedServerListener implements Listener {
 		}
 
 		if ((spigotServer.getPlayerLimit() - spigotServer.getPlayerCount()) < requiredSlots) {
-			party.sendMessage(partyPlugin.getLocales(), "partySwitchCantSwitch", spigotServer.getDisplayName());
+			party.sendMessage(partyPlugin.getLocales(), "switchServerCantSwitch", spigotServer.getDisplayName());
 			event.getCloudPlayer().sendToServer(event.getOldServer());
 			return;
 		}
 
-		party.sendMessage(partyPlugin.getLocales(), "partySwitchSwitched", spigotServer.getDisplayName());
+		party.sendMessage(partyPlugin.getLocales(), "switchServerSwitched", spigotServer.getDisplayName());
 		members.forEach(cloudMember -> cloudMember.sendToServer(spigotServer));
 	}
 }
