@@ -15,19 +15,18 @@ import java.util.Optional;
  * @author Nico (JumpingPxl) Middendorf
  */
 
-public class PlayerSwitchedServerListener implements Listener {
+public class PlayerSwitchServerListener implements Listener {
 
 	private PartyCloudPlugin partyPlugin;
 
-	public PlayerSwitchedServerListener(PartyCloudPlugin partyPlugin) {
+	public PlayerSwitchServerListener(PartyCloudPlugin partyPlugin) {
 		this.partyPlugin = partyPlugin;
 	}
 
 	@EventHandler
 	public void onPlayerSwitchServer(PlayerSwitchServerEvent event) {
 		Spigot spigotServer = event.getNewServer();
-		if (!event.getOldServer().getServerType().toLowerCase().contains("lobby") &&
-				spigotServer.getServerType().toLowerCase().contains("lobby")) {
+		if (spigotServer.getServerType().toLowerCase().contains("lobby")) {
 			return;
 		}
 
@@ -37,6 +36,10 @@ public class PlayerSwitchedServerListener implements Listener {
 		}
 
 		Party party = optionalParty.get();
+		if (!party.getLeaderUuid().equals(event.getCloudPlayer().getUuid())) {
+			return;
+		}
+
 		int requiredSlots = 0;
 		if (!party.getLeader().hasPermission("network.ignoreplayerlimit")) {
 			requiredSlots++;
@@ -51,7 +54,7 @@ public class PlayerSwitchedServerListener implements Listener {
 
 		if ((spigotServer.getPlayerLimit() - spigotServer.getPlayerCount()) < requiredSlots) {
 			party.sendMessage(partyPlugin.getLocales(), "switchServerCantSwitch", spigotServer.getDisplayName());
-			event.getCloudPlayer().sendToServer(event.getOldServer());
+			event.setCancelled(true);
 			return;
 		}
 
