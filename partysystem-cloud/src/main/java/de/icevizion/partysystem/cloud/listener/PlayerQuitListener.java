@@ -30,8 +30,8 @@ public class PlayerQuitListener implements Listener {
 		}
 
 		Party party = optionalParty.get();
-		List<String> memberUuids = party.getMemberUuids();
 		if (party.getLeaderUuid().equals(event.getCloudPlayer().getUuid())) {
+			List<String> memberUuids = party.getMemberUuids();
 			if (memberUuids.isEmpty()) {
 				partyPlugin.deleteParty(party);
 				return;
@@ -46,6 +46,7 @@ public class PlayerQuitListener implements Listener {
 
 			party.removeMember(targetPlayer);
 			party.setLeader(targetPlayer);
+			party.sendMessage(partyPlugin.getLocales(), "partyLeaveLeft", event.getCloudPlayer().getFullDisplayName());
 			party.sendMessage(partyPlugin.getLocales(), "partyLeavePromoted", targetPlayer.getFullDisplayName(),
 					event.getCloudPlayer().getFullDisplayName());
 			return;
@@ -54,7 +55,7 @@ public class PlayerQuitListener implements Listener {
 		party.removeMember(event.getCloudPlayer());
 		party.sendMessage(partyPlugin.getLocales(), "partyLeaveLeft", event.getCloudPlayer().getFullDisplayName());
 
-		if (memberUuids.isEmpty()) {
+		if (party.getMemberUuids().isEmpty()) {
 			partyPlugin.getLocales().sendMessage(party.getLeader(), "partyDeleted");
 			partyPlugin.deleteParty(party);
 		}

@@ -29,8 +29,8 @@ public class PartyLeaveCommand extends PartySubCommand {
 		}
 
 		Party party = optionalParty.get();
-		List<String> memberUuids = party.getMemberUuids();
 		if (party.getLeaderUuid().equals(cloudPlayer.getUuid())) {
+			List<String> memberUuids = party.getMemberUuids();
 			if (memberUuids.isEmpty()) {
 				partyPlugin.deleteParty(party);
 				return;
@@ -38,15 +38,19 @@ public class PartyLeaveCommand extends PartySubCommand {
 
 			CloudPlayer targetPlayer = partyPlugin.getCloud().getPlayer(memberUuids.get(0));
 			if (memberUuids.size() == 1) {
-				partyPlugin.getLocales().sendMessage(targetPlayer, "partyDeleted");
+				party.sendMessage(partyPlugin.getLocales(), "partyLeaveLeft", cloudPlayer.getFullDisplayName());
 				partyPlugin.deleteParty(party);
+				partyPlugin.getLocales().sendMessage(targetPlayer, "partyDeleted");
+				partyPlugin.getLocales().sendMessage(cloudPlayer, "partyLeaveSuccess");
 				return;
 			}
 
 			party.removeMember(targetPlayer);
 			party.setLeader(targetPlayer);
+			party.sendMessage(partyPlugin.getLocales(), "partyLeaveLeft", cloudPlayer.getFullDisplayName());
 			party.sendMessage(partyPlugin.getLocales(), "partyLeavePromoted", targetPlayer.getFullDisplayName(),
 					cloudPlayer.getFullDisplayName());
+			partyPlugin.getLocales().sendMessage(cloudPlayer, "partyLeaveSuccess");
 			return;
 		}
 
@@ -54,7 +58,7 @@ public class PartyLeaveCommand extends PartySubCommand {
 		party.sendMessage(partyPlugin.getLocales(), "partyLeaveLeft", cloudPlayer.getFullDisplayName());
 		partyPlugin.getLocales().sendMessage(cloudPlayer, "partyLeaveSuccess");
 
-		if (memberUuids.isEmpty()) {
+		if (party.getMemberUuids().isEmpty()) {
 			partyPlugin.getLocales().sendMessage(party.getLeader(), "partyDeleted");
 			partyPlugin.deleteParty(party);
 		}
