@@ -58,13 +58,18 @@ public class PartyDenyCommand extends PartySubCommand {
 			return;
 		}
 
-		Party targetParty = optionalParty.get();
-		if (!targetParty.isInviteValid(cloudPlayer)) {
+		Party party = optionalParty.get();
+		if(party.getMemberUuids().contains(cloudPlayer.getUuid())) {
+			partyPlugin.getLocales().sendMessage(cloudPlayer, "partyDenyAlreadyInParty");
+			return;
+		}
+
+		if (!party.isInviteValid(cloudPlayer)) {
 			partyPlugin.getLocales().sendMessage(cloudPlayer, "partyDenyInviteExpired");
 			return;
 		}
 
-		targetParty.addMember(cloudPlayer.getUuid());
-		targetParty.sendMessage(partyPlugin.getLocales(), "partyDenyDenied", cloudPlayer.getFullDisplayName());
+		party.removeInvite(cloudPlayer);
+		party.sendMessage(partyPlugin.getLocales(), "partyDenyDenied", cloudPlayer.getFullDisplayName());
 	}
 }

@@ -39,7 +39,6 @@ public class PartyDeleteCommand extends PartySubCommand {
 		}
 
 		party.sendMessage(partyPlugin.getLocales(), "partyDeleteSuccess");
-		party.setActive(false);
 		partyPlugin.deleteParty(party);
 	}
 }

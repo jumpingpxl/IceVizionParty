@@ -21,11 +21,13 @@ public class Party extends MemoryObject implements IParty {
 	@Id
 	protected final String identifier;
 	private final PartyCloudPlugin partyPlugin;
+	private final ScheduledTask taskAfterIdle;
 
 	public Party(PartyCloudPlugin partyPlugin, String identifier) {
 		super("Party", partyPlugin.getCloud().getCloudRedis());
 		this.identifier = identifier;
 		this.partyPlugin = partyPlugin;
+		taskAfterIdle = new ScheduledTask(() -> partyPlugin.getLocales().sendMessage(getLeader(), "partyDeleted"));
 	}
 
 	public Party(PartyCloudPlugin partyPlugin, String identifier, CloudPlayer leader) {
@@ -100,8 +102,11 @@ public class Party extends MemoryObject implements IParty {
 		setData("active", active);
 		if (active) {
 			clearExpire();
+			taskAfterIdle.cancel();
 		} else {
 			expire(millisecondsUntilInviteExpires, TimeUnit.MILLISECONDS);
+			taskAfterIdle.cancel();
+			taskAfterIdle.delay(millisecondsUntilInviteExpires, TimeUnit.MILLISECONDS);
 		}
 	}
 
@@ -111,10 +116,18 @@ public class Party extends MemoryObject implements IParty {
 		setData("members", memberUuids);
 	}
 
+	public void addMember(CloudPlayer cloudPlayer) {
+		addMember(cloudPlayer.getUuid());
+	}
+
 	public void addInvite(String playerUuid) {
 		Map<String, Long> invites = getInvites();
 		invites.put(playerUuid, System.currentTimeMillis() + millisecondsUntilInviteExpires);
 		setData("invites", invites);
+	}
+
+	public void addInvite(CloudPlayer cloudPlayer) {
+		addInvite(cloudPlayer.getUuid());
 	}
 
 	public void removeMember(String playerUuid) {
@@ -123,10 +136,18 @@ public class Party extends MemoryObject implements IParty {
 		setData("members", memberUuids);
 	}
 
+	public void removeMember(CloudPlayer cloudPlayer) {
+		removeMember(cloudPlayer.getUuid());
+	}
+
 	public void removeInvite(String playerUuid) {
 		Map<String, Long> invites = getInvites();
 		invites.remove(playerUuid);
 		setData("invites", invites);
+	}
+
+	public void removeInvite(CloudPlayer cloudPlayer) {
+		removeInvite(cloudPlayer.getUuid());
 	}
 
 	public void sendMessage(Translator translator, String key, Object... arguments) {

@@ -29,6 +29,7 @@ public class PartyInviteCommand extends PartySubCommand {
 		Optional<Party> optionalParty = partyPlugin.getPartyByPlayer(cloudPlayer);
 		if (!optionalParty.isPresent()) {
 			Party createdParty = partyPlugin.createParty(cloudPlayer);
+			createdParty.setActive(false);
 			invitePlayer(createdParty, cloudPlayer, args);
 			return;
 		}
@@ -73,7 +74,11 @@ public class PartyInviteCommand extends PartySubCommand {
 				return;
 			}
 
-			party.addInvite(targetPlayer.getUuid());
+			if(!party.isActive()) {
+				party.setActive(false);
+			}
+
+			party.addInvite(targetPlayer);
 			party.sendMessage(partyPlugin.getLocales(), "partyInviteSuccess", targetPlayer.getFullDisplayName());
 			partyPlugin.getLocales().sendMessage(targetPlayer, "invited", cloudPlayer.getFullDisplayName());
 			partyPlugin.getLocales().sendChatComponent(targetPlayer, "invitedAcceptDeny", party.getIdentifier());

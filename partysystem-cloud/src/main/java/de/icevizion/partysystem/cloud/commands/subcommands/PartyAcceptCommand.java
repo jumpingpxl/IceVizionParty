@@ -58,13 +58,23 @@ public class PartyAcceptCommand extends PartySubCommand {
 			return;
 		}
 
-		Party targetParty = optionalParty.get();
-		if (!targetParty.isInviteValid(cloudPlayer)) {
+		Party party = optionalParty.get();
+		if(party.getMemberUuids().contains(cloudPlayer.getUuid())) {
+			partyPlugin.getLocales().sendMessage(cloudPlayer, "partyDenyAlreadyInParty");
+			return;
+		}
+		
+		if (!party.isInviteValid(cloudPlayer)) {
 			partyPlugin.getLocales().sendMessage(cloudPlayer, "partyAcceptInviteExpired");
 			return;
 		}
 
-		targetParty.addMember(cloudPlayer.getUuid());
-		targetParty.sendMessage(partyPlugin.getLocales(), "partyAcceptAccepted", cloudPlayer.getFullDisplayName());
+		if(!party.isActive()) {
+			party.setActive(true);
+		}
+
+		party.removeInvite(cloudPlayer);
+		party.addMember(cloudPlayer);
+		party.sendMessage(partyPlugin.getLocales(), "partyAcceptAccepted", cloudPlayer.getFullDisplayName());
 	}
 }
