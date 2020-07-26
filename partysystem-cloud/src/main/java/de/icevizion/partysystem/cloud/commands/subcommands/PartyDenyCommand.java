@@ -71,5 +71,6 @@ public class PartyDenyCommand extends PartySubCommand {
 
 		party.removeInvite(cloudPlayer);
 		party.sendMessage(partyPlugin.getLocales(), "partyDenyDenied", cloudPlayer.getFullDisplayName());
+		partyPlugin.getLocales().sendMessage(cloudPlayer, "partyDenySuccess", party.getLeader().getFullDisplayName());
 	}
 }

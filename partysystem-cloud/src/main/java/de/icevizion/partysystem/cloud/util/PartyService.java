@@ -10,24 +10,26 @@ import net.titan.manager.ClusterService;
 
 public class PartyService extends ClusterService {
 
-    private final PartyCloudPlugin partyCloudPlugin;
+	private final PartyCloudPlugin partyPlugin;
 
-    public PartyService(PartyCloudPlugin partyCloudPlugin) {
-        super("Party-Watcher");
-        this.partyCloudPlugin = partyCloudPlugin;
-    }
+	public PartyService(PartyCloudPlugin partyPlugin) {
+		super("Party-Watcher");
+		this.partyPlugin = partyPlugin;
+	}
 
-    @Override
-    public void run() {
-        while (!Thread.currentThread().isInterrupted() && !isStopping()) {
-            update();
+	@Override
+	public void run() {
+		while (!Thread.currentThread().isInterrupted() && !isStopping()) {
+			update();
+			if (isStopping()) {
+				return;
+			}
 
-            if (isStopping()) return;
-            serviceWait(5000);
-        }
-    }
+			serviceWait(5000);
+		}
+	}
 
-    private void update() {
-
-    }
+	private void update() {
+		partyPlugin.getParties().forEach(Party::checkForPartyTimeOut);
+	}
 }

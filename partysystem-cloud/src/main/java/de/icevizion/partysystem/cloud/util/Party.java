@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class Party extends MemoryObject implements IParty {
@@ -21,13 +20,12 @@ public class Party extends MemoryObject implements IParty {
 	@Id
 	protected final String identifier;
 	private final PartyCloudPlugin partyPlugin;
-	private final ScheduledTask taskAfterIdle;
+	private long deletePartyAt = 0L;
 
 	public Party(PartyCloudPlugin partyPlugin, String identifier) {
 		super("Party", partyPlugin.getCloud().getCloudRedis());
 		this.identifier = identifier;
 		this.partyPlugin = partyPlugin;
-		taskAfterIdle = new ScheduledTask(() -> partyPlugin.getLocales().sendMessage(getLeader(), "partyDeleted"));
 	}
 
 	public Party(PartyCloudPlugin partyPlugin, String identifier, CloudPlayer leader) {
@@ -105,12 +103,9 @@ public class Party extends MemoryObject implements IParty {
 	public void setActive(boolean active) {
 		setData("active", active);
 		if (active) {
-			clearExpire();
-			taskAfterIdle.cancel();
+			deletePartyAt = 0L;
 		} else {
-			expire(millisecondsUntilInviteExpires, TimeUnit.MILLISECONDS);
-			taskAfterIdle.cancel();
-			taskAfterIdle.delay(millisecondsUntilInviteExpires, TimeUnit.MILLISECONDS);
+			deletePartyAt = System.currentTimeMillis() + millisecondsUntilInviteExpires;
 		}
 	}
 
@@ -157,5 +152,18 @@ public class Party extends MemoryObject implements IParty {
 	public void sendMessage(Translator translator, String key, Object... arguments) {
 		translator.sendMessage(getLeader(), key, arguments);
 		getMembers().forEach(member -> translator.sendMessage(member, key, arguments));
+	}
+
+	public void checkForPartyTimeOut() {
+		if (deletePartyAt == 0L) {
+			return;
+		}
+
+		if (deletePartyAt > System.currentTimeMillis()) {
+			return;
+		}
+
+		sendMessage(partyPlugin.getLocales(), "partyDeleted");
+		partyPlugin.deleteParty(this);
 	}
 }

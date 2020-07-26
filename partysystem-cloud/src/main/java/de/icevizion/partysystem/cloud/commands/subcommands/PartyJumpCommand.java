@@ -30,7 +30,7 @@ public class PartyJumpCommand extends PartySubCommand {
 
 		Party party = optionalParty.get();
 		CloudPlayer targetPlayer = party.getLeader();
-		if(cloudPlayer.getSpigot().getIdentifier().equals(targetPlayer.getSpigot().getIdentifier())) {
+		if (cloudPlayer.getSpigot().getIdentifier().equals(targetPlayer.getSpigot().getIdentifier())) {
 			partyPlugin.getLocales().sendMessage(cloudPlayer, "partyJumpAlreadyOnServer", targetPlayer.getFullDisplayName());
 			return;
 		}
