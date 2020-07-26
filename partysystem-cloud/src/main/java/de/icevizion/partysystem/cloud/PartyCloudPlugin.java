@@ -57,7 +57,7 @@ public class PartyCloudPlugin extends Plugin {
 	}
 
 	public List<Party> getParties() {
-		return cloud.getCloudRedis().getKeys().findKeysByPattern(redisIdentifier + "*").stream().map(
+		return cloud.getCloudRedis().getKeys().getKeysStreamByPattern(redisIdentifier + "*").map(
 				id -> new Party(this, id.replace(redisIdentifier, ""))).collect(Collectors.toList());
 	}
 
