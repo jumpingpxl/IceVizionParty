@@ -17,7 +17,7 @@ import java.util.Optional;
 
 public class PlayerSwitchServerListener implements Listener {
 
-	private PartyCloudPlugin partyPlugin;
+	private final PartyCloudPlugin partyPlugin;
 
 	public PlayerSwitchServerListener(PartyCloudPlugin partyPlugin) {
 		this.partyPlugin = partyPlugin;

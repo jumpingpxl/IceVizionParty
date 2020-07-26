@@ -76,5 +76,6 @@ public class PartyAcceptCommand extends PartySubCommand {
 		party.removeInvite(cloudPlayer);
 		party.addMember(cloudPlayer);
 		party.sendMessage(partyPlugin.getLocales(), "partyAcceptAccepted", cloudPlayer.getFullDisplayName());
+		partyPlugin.getLocales().sendChatComponent(cloudPlayer, "partyAcceptJump", party.getLeader().getFullDisplayName());
 	}
 }

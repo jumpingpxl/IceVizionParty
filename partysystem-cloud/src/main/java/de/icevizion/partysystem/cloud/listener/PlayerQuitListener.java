@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public class PlayerQuitListener implements Listener {
 
-	private PartyCloudPlugin partyPlugin;
+	private final PartyCloudPlugin partyPlugin;
 
 	public PlayerQuitListener(PartyCloudPlugin partyPlugin) {
 		this.partyPlugin = partyPlugin;

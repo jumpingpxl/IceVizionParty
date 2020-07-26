@@ -66,6 +66,7 @@ public class PartyCommand extends Command {
 		subCommands.put("forceinvite", new PartyForceInviteCommand(partyPlugin));
 		subCommands.put("invites", new PartyInvitesCommand(partyPlugin));
 		subCommands.put("invite", new PartyInviteCommand(partyPlugin));
+		subCommands.put("jump", new PartyJumpCommand(partyPlugin));
 		subCommands.put("kick", new PartyKickCommand(partyPlugin));
 		subCommands.put("leave", new PartyLeaveCommand(partyPlugin));
 		subCommands.put("list", new PartyListCommand(partyPlugin));

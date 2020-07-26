@@ -56,5 +56,10 @@ public class PartyKickCommand extends PartySubCommand {
 		party.removeMember(targetPlayer);
 		party.sendMessage(partyPlugin.getLocales(), "partyKickSuccess", targetPlayer.getFullDisplayName());
 		partyPlugin.getLocales().sendMessage(targetPlayer, "partyKickKicked");
+
+		if (party.getMemberUuids().isEmpty()) {
+			partyPlugin.getLocales().sendMessage(party.getLeader(), "partyDeleted");
+			partyPlugin.deleteParty(party);
+		}
 	}
 }
