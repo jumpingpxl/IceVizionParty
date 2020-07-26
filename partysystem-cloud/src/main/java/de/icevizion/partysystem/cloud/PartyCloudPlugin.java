@@ -2,6 +2,8 @@ package de.icevizion.partysystem.cloud;
 
 import de.icevizion.partysystem.cloud.commands.PartyCommand;
 import de.icevizion.partysystem.cloud.commands.subcommands.PartyMessageCommand;
+import de.icevizion.partysystem.cloud.listener.PlayerQuitListener;
+import de.icevizion.partysystem.cloud.listener.PlayerSwitchedServerListener;
 import de.icevizion.partysystem.cloud.util.Locales;
 import de.icevizion.partysystem.cloud.util.Party;
 import net.titan.Cloud;
@@ -24,11 +26,13 @@ public class PartyCloudPlugin extends Plugin {
 	public void onLoad() {
 		//TODO -> Remove Singleton Pattern.
 		cloud = Cloud.getInstance();
-
 		locales = new Locales(this);
 
 		cloud.registerCommand("party", new PartyCommand(this));
 		cloud.registerCommand("p", new PartyMessageCommand(this));
+
+		cloud.registerListener(new PlayerSwitchedServerListener(this));
+		cloud.registerListener(new PlayerQuitListener(this));
 	}
 
 	@Override

@@ -98,6 +98,10 @@ public class Party extends MemoryObject implements IParty {
 		setData("leader", playerUuid);
 	}
 
+	public void setLeader(CloudPlayer cloudPlayer) {
+		setLeader(cloudPlayer.getUuid());
+	}
+
 	public void setActive(boolean active) {
 		setData("active", active);
 		if (active) {

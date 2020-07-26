@@ -53,9 +53,9 @@ public class PartyPromoteCommand extends PartySubCommand {
 			return;
 		}
 
-		party.removeMember(targetPlayer.getUuid());
-		party.addMember(cloudPlayer.getUuid());
-		party.setLeader(targetPlayer.getUuid());
+		party.removeMember(targetPlayer);
+		party.addMember(cloudPlayer);
+		party.setLeader(targetPlayer);
 		party.sendMessage(partyPlugin.getLocales(), "partyPromoteSuccess", targetPlayer.getFullDisplayName());
 	}
 }

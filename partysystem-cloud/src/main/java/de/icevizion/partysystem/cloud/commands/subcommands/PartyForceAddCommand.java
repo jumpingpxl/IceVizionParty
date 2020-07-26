@@ -65,9 +65,9 @@ public class PartyForceAddCommand extends PartySubCommand {
 			party.sendMessage(partyPlugin.getLocales(), "partyForceAddSuccess", targetPlayer.getFullDisplayName());
 			partyPlugin.getLocales().sendMessage(targetPlayer, "partyForceAddAdded", party.getLeader().getFullDisplayName(),
 					cloudPlayer.getFullDisplayName());
-			party.addMember(targetPlayer.getUuid());
+			party.addMember(targetPlayer);
 			if (party.getInvites().containsKey(targetPlayer.getUuid().toLowerCase())) {
-				party.removeInvite(targetPlayer.getUuid());
+				party.removeInvite(targetPlayer);
 			}
 		}
 	}

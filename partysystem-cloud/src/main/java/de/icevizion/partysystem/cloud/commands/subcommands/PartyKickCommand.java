@@ -53,7 +53,7 @@ public class PartyKickCommand extends PartySubCommand {
 			return;
 		}
 
-		party.removeMember(targetPlayer.getUuid());
+		party.removeMember(targetPlayer);
 		party.sendMessage(partyPlugin.getLocales(), "partyKickSuccess", targetPlayer.getFullDisplayName());
 		partyPlugin.getLocales().sendMessage(targetPlayer, "partyKickKicked");
 	}

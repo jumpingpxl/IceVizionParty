@@ -1,8 +1,10 @@
-package de.icevizion.partysystem.cloud.commands.subcommands;
+package de.icevizion.partysystem.cloud.listener;
 
 import de.icevizion.partysystem.cloud.PartyCloudPlugin;
 import de.icevizion.partysystem.cloud.util.Party;
-import de.icevizion.partysystem.cloud.util.PartySubCommand;
+import net.titan.event.EventHandler;
+import net.titan.event.Listener;
+import net.titan.event.events.PlayerQuitEvent;
 import net.titan.player.CloudPlayer;
 
 import java.util.List;
@@ -12,25 +14,24 @@ import java.util.Optional;
  * @author Nico (JumpingPxl) Middendorf
  */
 
-public class PartyLeaveCommand extends PartySubCommand {
+public class PlayerQuitListener implements Listener {
 
-	private final PartyCloudPlugin partyPlugin;
+	private PartyCloudPlugin partyPlugin;
 
-	public PartyLeaveCommand(PartyCloudPlugin partyPlugin) {
+	public PlayerQuitListener(PartyCloudPlugin partyPlugin) {
 		this.partyPlugin = partyPlugin;
 	}
 
-	@Override
-	public void execute(CloudPlayer cloudPlayer, String label, String[] args) {
-		Optional<Party> optionalParty = partyPlugin.getPartyByPlayer(cloudPlayer);
-		if (!optionalParty.isPresent()) {
-			partyPlugin.getLocales().sendMessage(cloudPlayer, "notInParty");
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		Optional<Party> optionalParty = partyPlugin.getPartyByPlayer(event.getCloudPlayer());
+		if (optionalParty.isPresent()) {
 			return;
 		}
 
 		Party party = optionalParty.get();
 		List<String> memberUuids = party.getMemberUuids();
-		if (party.getLeaderUuid().equals(cloudPlayer.getUuid())) {
+		if (party.getLeaderUuid().equals(event.getCloudPlayer().getUuid())) {
 			if (memberUuids.isEmpty()) {
 				partyPlugin.deleteParty(party);
 				return;
@@ -46,13 +47,12 @@ public class PartyLeaveCommand extends PartySubCommand {
 			party.removeMember(targetPlayer);
 			party.setLeader(targetPlayer);
 			party.sendMessage(partyPlugin.getLocales(), "partyLeavePromoted", targetPlayer.getFullDisplayName(),
-					cloudPlayer.getFullDisplayName());
+					event.getCloudPlayer().getFullDisplayName());
 			return;
 		}
 
-		party.removeMember(cloudPlayer);
-		party.sendMessage(partyPlugin.getLocales(), "partyLeaveLeft", cloudPlayer.getFullDisplayName());
-		partyPlugin.getLocales().sendMessage(cloudPlayer, "partyLeaveSuccess");
+		party.removeMember(event.getCloudPlayer());
+		party.sendMessage(partyPlugin.getLocales(), "partyLeaveLeft", event.getCloudPlayer().getFullDisplayName());
 
 		if (memberUuids.isEmpty()) {
 			partyPlugin.getLocales().sendMessage(party.getLeader(), "partyDeleted");
