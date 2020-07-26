@@ -26,12 +26,6 @@ public class PartyAcceptCommand extends PartySubCommand {
 			return;
 		}
 
-		Optional<Party> optionalParty = partyPlugin.getPartyByPlayer(cloudPlayer);
-		if (optionalParty.isPresent()) {
-			partyPlugin.getLocales().sendMessage(cloudPlayer, "partyAcceptInOtherParty");
-			return;
-		}
-
 		if (args.length == 2 && args[0].equalsIgnoreCase("direct")) {
 			Optional<Party> optionalDirectParty = partyPlugin.getPartyByIdentifier(args[1]);
 			acceptInvite(optionalDirectParty, cloudPlayer);
@@ -59,17 +53,23 @@ public class PartyAcceptCommand extends PartySubCommand {
 		}
 
 		Party party = optionalParty.get();
-		if(party.getMemberUuids().contains(cloudPlayer.getUuid())) {
-			partyPlugin.getLocales().sendMessage(cloudPlayer, "partyDenyAlreadyInParty");
+		if (party.getMemberUuids().contains(cloudPlayer.getUuid())) {
+			partyPlugin.getLocales().sendMessage(cloudPlayer, "partyAcceptAlreadyInParty");
 			return;
 		}
-		
+
+		Optional<Party> optionalOwnParty = partyPlugin.getPartyByPlayer(cloudPlayer);
+		if (optionalOwnParty.isPresent()) {
+			partyPlugin.getLocales().sendMessage(cloudPlayer, "partyAcceptInOtherParty");
+			return;
+		}
+
 		if (!party.isInviteValid(cloudPlayer)) {
 			partyPlugin.getLocales().sendMessage(cloudPlayer, "partyAcceptInviteExpired");
 			return;
 		}
 
-		if(!party.isActive()) {
+		if (!party.isActive()) {
 			party.setActive(true);
 		}
 

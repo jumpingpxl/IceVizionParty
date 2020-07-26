@@ -45,7 +45,8 @@ public class PartyInvitesCommand extends PartySubCommand {
 		}
 
 		List<String> invitedPlayers = new ArrayList<>();
-		party.getInvitedPlayers().forEach(player -> invitedPlayers.add(player.getFullUsername()));
+		party.getInvitedPlayers().stream().filter(party::isInviteValid).forEach(
+				player -> invitedPlayers.add(player.getFullUsername()));
 		String listSeparator = partyPlugin.getLocales().getPattern(cloudPlayer, "listSeparator");
 		String inviteList = String.join(listSeparator, invitedPlayers.toArray(new String[0]));
 		partyPlugin.getLocales().sendMessage(cloudPlayer, "partyInvitesOutgoingInvites", invitedPlayers.size(),

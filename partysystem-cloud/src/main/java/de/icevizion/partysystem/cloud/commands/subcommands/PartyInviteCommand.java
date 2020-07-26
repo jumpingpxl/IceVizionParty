@@ -61,7 +61,7 @@ public class PartyInviteCommand extends PartySubCommand {
 				return;
 			}
 
-			if (party.getInvites().containsKey(cloudPlayer.getUuid())) {
+			if (party.isPlayerInvited(targetPlayer)) {
 				partyPlugin.getLocales().sendMessage(cloudPlayer, "partyInviteAlreadyInvited",
 						targetPlayer.getFullDisplayName());
 				return;
@@ -74,7 +74,7 @@ public class PartyInviteCommand extends PartySubCommand {
 				return;
 			}
 
-			if(!party.isActive()) {
+			if (!party.isActive()) {
 				party.setActive(false);
 			}
 

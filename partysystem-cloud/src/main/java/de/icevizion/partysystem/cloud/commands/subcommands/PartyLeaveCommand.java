@@ -37,7 +37,7 @@ public class PartyLeaveCommand extends PartySubCommand {
 			}
 
 			CloudPlayer targetPlayer = partyPlugin.getCloud().getPlayer(memberUuids.get(0));
-			if(memberUuids.size() == 1) {
+			if (memberUuids.size() == 1) {
 				partyPlugin.getLocales().sendMessage(targetPlayer, "partyDeleted");
 				partyPlugin.deleteParty(party);
 				return;

@@ -26,12 +26,6 @@ public class PartyDenyCommand extends PartySubCommand {
 			return;
 		}
 
-		Optional<Party> optionalParty = partyPlugin.getPartyByPlayer(cloudPlayer);
-		if (optionalParty.isPresent()) {
-			partyPlugin.getLocales().sendMessage(cloudPlayer, "partyDenyInOtherParty");
-			return;
-		}
-
 		if (args.length == 2 && args[0].equalsIgnoreCase("direct")) {
 			Optional<Party> optionalDirectParty = partyPlugin.getPartyByIdentifier(args[1]);
 			denyInvite(optionalDirectParty, cloudPlayer);
@@ -59,8 +53,14 @@ public class PartyDenyCommand extends PartySubCommand {
 		}
 
 		Party party = optionalParty.get();
-		if(party.getMemberUuids().contains(cloudPlayer.getUuid())) {
+		if (party.getMemberUuids().contains(cloudPlayer.getUuid())) {
 			partyPlugin.getLocales().sendMessage(cloudPlayer, "partyDenyAlreadyInParty");
+			return;
+		}
+
+		Optional<Party> optionalOwnParty = partyPlugin.getPartyByPlayer(cloudPlayer);
+		if (optionalOwnParty.isPresent()) {
+			partyPlugin.getLocales().sendMessage(cloudPlayer, "partyDenyInOtherParty");
 			return;
 		}
 
