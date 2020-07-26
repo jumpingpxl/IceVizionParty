@@ -6,6 +6,7 @@ import de.icevizion.partysystem.cloud.listener.PlayerQuitListener;
 import de.icevizion.partysystem.cloud.listener.PlayerSwitchServerListener;
 import de.icevizion.partysystem.cloud.util.Locales;
 import de.icevizion.partysystem.cloud.util.Party;
+import de.icevizion.partysystem.cloud.util.PartyService;
 import net.titan.Cloud;
 import net.titan.player.CloudPlayer;
 import net.titan.plugin.Plugin;
@@ -33,6 +34,8 @@ public class PartyCloudPlugin extends Plugin {
 
 		cloud.registerListener(new PlayerSwitchServerListener(this));
 		cloud.registerListener(new PlayerQuitListener(this));
+
+		cloud.getClusterManager().registerServiceMaster(new PartyService(this));
 	}
 
 	@Override
