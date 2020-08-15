@@ -14,7 +14,6 @@ import net.titan.plugin.Plugin;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class PartyCloudPlugin extends Plugin {
@@ -93,10 +92,7 @@ public class PartyCloudPlugin extends Plugin {
 			identifier = (int) (Math.random() * 10000);
 		} while (cloud.getCloudRedis().getKeys().countExists(redisIdentifier + identifier) > 0);
 
-		Party party = new Party(this, String.valueOf(identifier), leader);
-		cloud.getCloudRedis().getKeys().expire(redisIdentifier + identifier, party.getMillisecondsUntilInviteExpires(),
-				TimeUnit.MILLISECONDS);
-		return party;
+		return new Party(this, String.valueOf(identifier), leader);
 	}
 
 	public void deleteParty(Party party) {
