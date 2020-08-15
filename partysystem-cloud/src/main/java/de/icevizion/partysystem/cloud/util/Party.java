@@ -20,7 +20,6 @@ public class Party extends MemoryObject implements IParty {
 	@Id
 	protected final String identifier;
 	private final PartyCloudPlugin partyPlugin;
-	private long deletePartyAt = 0L;
 
 	public Party(PartyCloudPlugin partyPlugin, String identifier) {
 		super("Party", partyPlugin.getCloud().getCloudRedis());
@@ -103,9 +102,9 @@ public class Party extends MemoryObject implements IParty {
 	public void setActive(boolean active) {
 		setData("active", active);
 		if (active) {
-			deletePartyAt = 0L;
+			setData("deleteAt", 0L);
 		} else {
-			deletePartyAt = System.currentTimeMillis() + millisecondsUntilInviteExpires;
+			setData("deleteAt", System.currentTimeMillis() + millisecondsUntilInviteExpires);
 		}
 	}
 
@@ -155,11 +154,12 @@ public class Party extends MemoryObject implements IParty {
 	}
 
 	public void checkForPartyTimeOut() {
-		if (deletePartyAt == 0L) {
+		long deleteAt = getData("deleteAt", 0L);
+		if (deleteAt == 0L) {
 			return;
 		}
 
-		if (deletePartyAt > System.currentTimeMillis()) {
+		if (deleteAt > System.currentTimeMillis()) {
 			return;
 		}
 
